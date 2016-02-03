@@ -69,7 +69,6 @@ class Datatable
     {
         $this->_container        = $container;
         $this->_config           = $this->_container->getParameter('ali_datatable');
-        $this->_request          = $this->_container->get('request');
         self::$_current_instance = $this;
         $this->_applyDefaults();
     }
@@ -111,14 +110,19 @@ class Datatable
         return $this;
     }
 
+    public function setRequest($request) {
+        $this->_request = $request;
+        return $this;
+    }
+
     /**
      * execute
      * 
      * @return JsonResponse
      */
-    public function execute()
+    public function execute($request)
     {
-        $request       = $this->_request;
+
         $iTotalRecords = $this->_queryBuilder->getTotalRecords();
         list($data, $objects) = $this->_queryBuilder->getData();
         $id_index      = array_search('_identifier_', array_keys($this->getFields()));
@@ -292,8 +296,8 @@ class Datatable
     /**
      * set entity
      * 
-     * @param string $entity_name
-     * @param string $entity_alias
+     * @param type $entity_name
+     * @param type $entity_alias
      * 
      * @return \Ali\DatatableBundle\Util\Datatable 
      */
@@ -312,7 +316,7 @@ class Datatable
      */
     public function setEntityManager(EntityManager $em)
     {
-        $this->_queryBuilder = new DoctrineBuilder($this->_container, $em);
+        $this->_queryBuilder = new DoctrineBuilder($this->_container, $em, $this->_request);
         return $this;
     }
 
@@ -361,7 +365,7 @@ class Datatable
     /**
      * set has action
      * 
-     * @param boolean $has_action
+     * @param type $has_action
      * 
      * @return \Ali\DatatableBundle\Util\Datatable
      */
@@ -374,8 +378,8 @@ class Datatable
     /**
      * set order
      * 
-     * @param string $order_field
-     * @param string $order_type
+     * @param type $order_field
+     * @param type $order_type
      * 
      * @return \Ali\DatatableBundle\Util\Datatable 
      */
@@ -388,7 +392,7 @@ class Datatable
     /**
      * set fixed data
      * 
-     * @param null|array $data
+     * @param type $data
      * 
      * @return \Ali\DatatableBundle\Util\Datatable 
      */
